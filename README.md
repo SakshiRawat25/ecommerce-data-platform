@@ -191,6 +191,135 @@ git remote add origin correct-url
 * Covers **end-to-end data engineering workflow**
 * Demonstrates **problem-solving with real issues**
 
+# Day 2 (27-03-2026)
+
+# Built the first data ingestion pipeline:
+ 
+* API → Python Script → JSON File → data/raw/customers/
+ 
+* This represents the Extract + Load (EL) phase of a real-world data pipeline.
+ 
+* 🔍 Core Concepts Learned
+ 1️⃣ API Data Ingestion
+* Used requests to fetch external data
+* Worked with real API (RandomUser)
+* Understood JSON response structure
+
+ 2️⃣ Python Script Design
+* Created modular functions:
+* fetch_customers()
+* save_data()
+* Used clean and reusable coding practices
+
+ 3️⃣ Entry Point Concept
+* if __name__ == "__main__":
+* Ensures script runs only when executed directly
+* Prevents execution when imported into other modules
+* Important for Airflow and scalable pipelines
+
+ 4️⃣ File Handling
+* with open(path, "w") as f:
+*     json.dump(data, f, indent=4)
+* 
+# Key learnings:
+* 
+* with ensures safe file handling
+* "w" creates or overwrites file
+* json.dump() writes Python → JSON
+* indent=4 improves readability
+
+ 5️⃣ Timestamp & File Naming
+
+* Correct format:
+
+* "%Y%m%d_%H%M%S"
+
+* Mistakes identified:
+
+* %M = minutes (not month)
+* %D introduces / → creates folders unintentionally
+
+6️⃣ File Path Behavior
+* / in string → treated as folder separator
+* Caused unintended nested directories
+* Learned importance of safe path formatting
+
+7️⃣ Automatic Folder Creation
+* os.makedirs(..., exist_ok=True)
+* Creates missing directories
+* Makes pipeline idempotent
+* Avoids manual setup
+* 🧪 Debugging Learnings
+* 🔥 Error: Function Not JSON Serializable
+* Cause: Passing function instead of calling it
+* Fix:
+* fetch_customers() ✅
+
+* 🔥 Error: Module Not Found
+* Cause: Package not installed in .venv
+* Fix:
+* pip install requests
+
+* 🔥 Error: PowerShell Execution Policy
+* Cause: Script execution blocked
+* Fix:
+* Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+* 🔥 Error: Wrong Folder Creation
+* Cause: Incorrect timestamp format (%D)
+* Fix: Use %Y%m%d
+
+* 🧠 Virtual Environment Understanding
+* Why .venv is Important
+* Prevents dependency conflicts
+* Keeps projects isolated
+* Matches industry standards
+ 
+# Example:
+ 
+* Project	Version
+* A	requests==2.25
+* B	requests==2.31
+
+* Without .venv → conflict
+* With .venv → isolation ✅
+
+ 📦 Dependency Management
+* Command:
+* pip freeze > requirements.txt
+* Captures all installed packages
+* Enables reproducibility
+* Usage:
+* pip install -r requirements.txt
+
+ 🚧 Challenges Faced
+* Function vs function call confusion
+* Incorrect datetime formatting
+* File path issues due to /
+* Virtual environment setup errors
+* PowerShell restrictions
+* Missing dependencies
+* Understanding pip freeze
+
+ 🚀 Key Takeaways
+* Data ingestion is the foundation of data engineering
+* Small mistakes (like %D) can break pipelines
+* Environment management is critical
+* Debugging is a core skill, not a side skill
+* Writing code ≠ building pipelines (structure matters)
+
+ 🎯 Outcome
+* Built a working ingestion pipeline
+* Understood real-world debugging scenarios
+* Set up proper development environment
+* Established strong foundation for next steps
+
+ 🔜 Next Steps
+* Add more ingestion sources (Products, Orders)
+* Introduce logging & error handling
+* Integrate Airflow for orchestration
+* Move towards transformation layer (PySpark)
+
 ---
 
 ## 👩‍💻 Author
