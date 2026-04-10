@@ -284,6 +284,87 @@ git remote add origin correct-url
 * Without .venv → conflict
 * With .venv → isolation ✅
 
+📥 Customer Data Ingestion Pipeline
+
+The first ingestion pipeline has been successfully implemented using the RandomUser API, simulating real-world external data ingestion.
+
+🔄 Pipeline Flow
+API (RandomUser)
+   ↓
+Python Script (customers_api.py)
+   ↓
+JSON File
+   ↓
+data/raw/customers/
+⚙️ Key Components
+1️⃣ API Extraction
+Used requests library to fetch customer data
+
+Endpoint:
+
+https://randomuser.me/api/?results=100
+
+Implemented error handling using:
+
+response.raise_for_status()
+2️⃣ Data Storage (Raw Layer)
+Data is stored in JSON format
+
+Location:
+
+data/raw/customers/
+File naming uses timestamp to avoid overwriting:
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+Example:
+
+customers_20260327_191952.json
+3️⃣ Automatic Folder Creation
+os.makedirs(os.path.dirname(path), exist_ok=True)
+Ensures folders are created automatically
+Makes pipeline idempotent and robust
+4️⃣ File Writing
+with open(path, "w") as f:
+    json.dump(data, f, indent=4)
+Converts Python data → JSON
+Stores structured raw data
+indent=4 improves readability for debugging
+🧠 Development Best Practices Applied
+Modular function design:
+fetch_customers()
+save_data()
+Clear script entry point:
+if __name__ == "__main__":
+Separation of concerns (data fetch vs storage)
+Scalable design for adding more pipelines
+🧪 Environment Setup
+Created isolated environment using .venv
+Installed dependencies:
+pip install requests
+Captured dependencies for reproducibility:
+pip freeze > requirements.txt
+⚠️ Challenges Faced During Implementation
+1️⃣ Function vs Function Call Bug
+fetch_customers   ❌
+fetch_customers() ✅
+Passing function instead of calling it caused serialization error
+2️⃣ Incorrect Datetime Formatting
+"%Y%M%D_%H%M%S" ❌
+"%Y%m%d_%H%M%S" ✅
+%D introduced / → created unintended folders
+%M used incorrectly for month (it represents minutes)
+3️⃣ File Path Issues
+/ in timestamp created nested directories unintentionally
+Learned importance of safe file naming
+4️⃣ Virtual Environment Issues
+
+Encountered:
+
+ModuleNotFoundError: No module named 'requests'
+Resolved by:
+Activating .venv
+Installing dependencies inside environment
+
  📦 Dependency Management
 * Command:
 * pip freeze > requirements.txt
